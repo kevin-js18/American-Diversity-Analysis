@@ -35,6 +35,7 @@ diversity_data$County[5] <- "Aleutians East"
 diversity_data$County[2299] <- "Oglala Lakota"
 diversity_data$County[grep("Ana", diversity_data$County)] <- "Doña Ana"
 diversity_data$County[grep("Wade Hampton", diversity_data$County)] <- "Kusilvak"
+diversity_data$County[1461] <- "LaSalle"
 
 diversity_data$County <- sapply(strsplit(diversity_data$County, " Count"), "[", 1)
 diversity_data$County <- sapply(strsplit(diversity_data$County, " Census Are"), "[", 1)
@@ -44,12 +45,35 @@ diversity_data$County <- sapply(strsplit(diversity_data$County, " City and Borou
 diversity_data$County <- sapply(strsplit(diversity_data$County, " Boroug"), "[", 1)
 diversity_data$County <- sapply(strsplit(diversity_data$County, " Municipalit"), "[", 1)
 
-names(diversity_data)[1] <- "id"
+state_df <- data.frame(unique(usa.shp$STATEFP))
+state_df <- arrange(state_df, unique.usa.shp.STATEFP.)
+state_df$alpha <- c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", 
+                    "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", 
+                    "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", 
+                    "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", 
+                    "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", 
+                    "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", 
+                    "WV", "WI", "WY")
 
-usa.shp.f <- fortify(usa.shp, region = "NAME")
+state_df$unique.usa.shp.STATEFP. <- as.character(state_df$unique.usa.shp.STATEFP.)
+usa.shp$STATEFP <- as.character(usa.shp$STATEFP)
+usa.shp$NAME <- as.character(usa.shp$NAME)
+
+usa.shp.df <- data.frame(usa.shp)
+
+for(i in 1:length(usa.shp$STATEFP)) {
+  usa.shp.df$State[i] <- state_df$alpha[grep(usa.shp$STATEFP[i], state_df$unique.usa.shp.STATEFP.)]
+}
+
+usa.shp.df <- unite(usa.shp.df, id, NAME, State, sep = ", ")
+diversity_data <- unite(diversity_data, id, County, State, sep = ", ")
+
+usa.shp$id <- usa.shp.df$id
+
+usa.shp.f <- fortify(usa.shp, region = "id")
 
 merge.shp <- merge(usa.shp.f, diversity_data, by = "id", all.x=TRUE)
-for (i in 3032:length(merge.shp$long)) {
+for (i in 925:length(merge.shp$long)) {
   if (merge.shp$long[i] > 100) {
     merge.shp$long[i] <- -merge.shp$long[i]
   }
@@ -70,7 +94,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 50)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Asian")
 
 ggplot() +
@@ -79,7 +103,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 100)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Black")
 
 ggplot() +
@@ -88,7 +112,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 100)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Hispanic")
 
 ggplot() +
@@ -97,7 +121,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 100)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Indian")
 
 ggplot() +
@@ -106,7 +130,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 20)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Pacific")
 
 ggplot() +
@@ -115,7 +139,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 100)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("White")
 
 ggplot() +
@@ -124,7 +148,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 30)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Biracial")
 
 # Hawaiian Plots
@@ -135,7 +159,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 50)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Asian")
 
 ggplot() +
@@ -144,7 +168,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 100)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Black")
 
 ggplot() +
@@ -153,7 +177,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 100)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Hispanic")
 
 ggplot() +
@@ -162,7 +186,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 100)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Indian")
 
 ggplot() +
@@ -171,7 +195,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 20)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Pacific")
 
 ggplot() +
@@ -180,7 +204,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 100)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("White")
 
 ggplot() +
@@ -189,7 +213,7 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple", limits = c(0, 30)) +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Biracial")
 
 # Continental plots
@@ -272,5 +296,5 @@ ggplot() +
                color = "grey", size = 0.25) +
   coord_map() +
   scale_fill_gradient(low = "white", high = "purple") +
-  theme_nothing(legend = TRUE) +
+  theme_nothing() +
   ggtitle("Pacific")
