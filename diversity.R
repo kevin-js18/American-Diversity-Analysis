@@ -10,8 +10,8 @@ library(dplyr)
 library(tidyr)
 set.seed(8000)
 
-url1 <- "C:/Users/aet/Desktop/School/R projects/Diversity data/us-counties-diversity-index/diversityindex.csv"
-url2 <- "C:/Users/aet/Desktop/School/R projects/Diversity data/cb_2015_us_county_20m/cb_2015_us_county_20m.shp"
+url1 <- "~/diversityindex.csv"
+url2 <- "~/cb_2015_us_county_20m.shp"
 
 diversity_data <- read_csv(url1)
 
